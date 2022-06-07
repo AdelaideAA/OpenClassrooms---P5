@@ -1,11 +1,12 @@
+//récuperer les données de l'API avec .map
 fetch("http://localhost:3000/api/products")
      .then(response => response.json())
      .then (jsonListSofa =>{
         let sofa="";
         jsonListSofa.map((values)=>{
-           sofa+=`<a href=${values._id}>
+           sofa+=`<a href=./product.html?id=${values._id}>
            <article>
-             <img src=${values.imageUrl} alt="Lorem ipsum dolor sit amet, Kanap name1">
+             <img src=${values.imageUrl} alt=${values.altTxt}>
              <h3 class="productName">${values.name}</h3>
              <p class="productDescription">${values.description}</p>
            </article>
@@ -16,7 +17,6 @@ fetch("http://localhost:3000/api/products")
      }).catch((err) => {
         console.log(err);
      });
-   
 
 
 
