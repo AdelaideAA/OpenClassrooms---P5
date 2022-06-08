@@ -5,58 +5,36 @@ const urlParams = new URLSearchParams(url.search);
 let id = urlParams.get("id")
 console.log (id)
 
+// Je fais appel à l'url du produit qui contient l'id qui correspond 
 fetch(`http://localhost:3000/api/products/${id}`)
-    .then(response => response.json())
+    .then(response => response.json())  
     .then((products) =>{       
-        return product (products)
-    })
+        //création de l'élement <img> + corespondance entre les données de products et les éléments + création des variables Parents
+        let image = document.createElement("img")
+        image.src = products.imageUrl
+        image.alt = products.altTxt
+        const imgParent = document.getElementsByClassName("item__img")
+        imgParent.appendChild(image);
+
+        document.getElementById("title").innerHTML = products.name;
+        document.getElementById("price").innerHTML = products.price;
+        document.getElementById("description").innerHTML = products.description;
+        
+        const clrParent = document.getElementById("colors");
+         //boucle pour récupérer les données du tableau colors
+        for (let color of products.colors){   
+            let optionValue = document.createElement("option")
+            
+            optionValue.setAttribute('value', 'color')
+            optionValue.textContent = color;
+            
+            clrParent.appendChild(optionValue);
+        }
+        
+    });
     
-    
 
 
-function product(data){
-    
-    const { imageUrl, altTxt, name, price, description, colors } = data;
-    const image =  appendImage(imageUrl, altTxt);
-    const title = appendTitle(name);
-    const prices = appendPrice(price);
-    const descriptions = appendContent(description);
-    const color = appendColor([colors]);
-    //console.log(colors)  tous OK
-
-};
-
-function appendImage(imageUrl, altTxt){
-    const image = document.createElement("img")
-    
-    image.src = imageUrl
-    image.alt = altTxt
-    
-    const eltParent = document.querySelector(".item__img")
-    eltParent.appendChild(image)  
-};
-
-
-function appendTitle(name){
-    let title = document.querySelector("#title")
-    title.textContent = name
-}
-
-function appendPrice(price){
-    let prices = document.getElementById("price")
-    prices.textContent = price
-}
-
-function appendContent(description){
-    let content = document.querySelector("#description")
-    content.textContent = description
-}
-
-// function appendColor([colors]){
-//     let color = document.getElementById("colors")
-//     color.textContent = [colors]
-//     console.log(color)
-// }
 
     
 
