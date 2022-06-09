@@ -177,3 +177,101 @@
 //     let content = document.querySelector("#description")
 //     content.textContent = description
 // }
+
+//****************************************************************************** */
+// Ajouter au panier
+
+//sauvegarder le panier
+// let canapeLocal = [];
+// const btn = document.querySelector("#addToCart");
+
+// function getCart(){
+//     let cart = localStorage.getItem("arrayCanapLocal");//lecture de localStorage grace à getItem
+//     if(cart == null){//lorsqu'on arrive sur la page le panier est vide donc [] vide
+//         return [];
+//     }else{
+//         return JSON.parse("arrayCanapLocal");//change en string
+//     }
+// };
+
+// //ajout lors du click
+// btn.addEventListener("click",(e) =>{
+//     let colors = document.querySelector("#colors").value
+//     let quantity = document.querySelector("#quantity").value
+//     let data = {
+//         id,
+//         colors,
+//         quantity
+//     };
+//     if (colors == null || colors === "" || quantity == null || quantity == 0) {
+//         alert("Veuillez choisir une couleur et une quantité");
+//     }
+//     if(localStorage.getItem("arrayCanapLocal")){//lecture de localStorage grace à getItem
+//         canapeLocal.push(localStorage.setItem("arrayCanapLocal", JSON.stringify(data)));//setItem ajoute data à localStorage
+//         console.log("le canapé est ajouté !")
+//     };
+
+//      addToCart(data); //Il faut que j'arrive a appeler mes fonctions
+// });
+
+// //Ajout au panier
+// function addToCart(product){
+//     let cart = getCart();
+//     let foundProduct = cart.find(p => p.id == product.id)//je cherche si un produit est = à un produit déjà ajouté
+//     if(foundProduct != undefined){ //si il trouve un élément
+//         foundProduct.quantity++;//il ajoute 1 à la quantité
+//     }else{
+//         product.quantity = 1; //sinon on le défini à 1
+//         cart.push(cart);//ajouter un autre produit au panier
+//     }
+
+//     //saveCart(cart);//avoir le nouveau contenu du panier
+// }
+
+// // //pouvoir retirer un produit du panier
+// function removeFromCart(product){
+//     let cart = getCart();
+//     cart = cart.filter(p => p.id != product.id);//je filtre pour retrouver l'id différent de product.id
+//     saveCart(cart);
+// };
+
+// // //Changer la quantité
+// function changeQuantity(product,quantity){
+//     let cart = getCart();
+//     let foundProduct = cart.find(p => p.id == product.id);
+//     if (foundProduct!= undefined){
+//         foundProduct.quantity += quantity;
+//         if(foundProduct.quantity <= 0){ //si la qt du produit est < ou = 0
+//             removeFromCart(foundProduct);//alors on supprime le produit du panier
+//         } //else{
+//         //     saveCart(cart);//si le produit n'est pas supprimé on enregistre le panier
+//         // }
+//     }
+
+// }
+// // //Retourner le nbr de produit du panier
+// function getNumberProduct(){
+//     let cart = getCart();
+//     let number = 0;
+//     for (let product of cart){
+//         number += product.quantity;
+//     }
+//     return number;
+// };
+
+// //Calculer le prix
+// function getTotalPrice(){
+//     let cart = getCart();
+//     let total = 0;
+//     for (let product of cart) {
+//         number += product.quantity * product.price;
+//     }
+//     return total;
+// }
+// for (let product of canapeLocal){
+  //     if(product == id &&){
+
+  //     }else{
+
+  //     }
+  // }
