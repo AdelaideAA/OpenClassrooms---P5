@@ -268,10 +268,7 @@
 //     }
 //     return total;
 // }
-// for (let product of canapeLocal){
-  //     if(product == id &&){
-
-  //     }else{
+// else{
 
   //     }
   // }
