@@ -272,3 +272,90 @@
 
   //     }
   // }
+
+// avec cette fonction dataCanap n'est pas itérable
+  // if(product.id === id && product.colors === colors){
+  //   for (let product of dataCanap){
+  //     product.quantity += quantity;
+  //     changeQuantity = true;
+  //     console.log("la boucle marche");
+  //     return product.quantity;
+    
+  //   }
+  //   localStorage.setItem("arrayCanapLocal", JSON.stringify(canapeLocal));
+    
+  // }
+
+  //test avec object.keys
+  // for (let product of Object.keys (dataCanap)){
+  //   let changeQuantity = dataCanap[product]
+  //   if(product.id == id && product.colors == colors){
+  //     product.changeQuantity += quantity;
+  //     //changeQuantity = true;
+  //     localStorage.setItem("arrayCanapLocal", JSON.stringify(canapeLocal));
+  //     console.log ("la boucle marche")
+  //   }
+  // }
+
+  //test avec object.entries
+
+  //for (const[ product, quantity] of Object.entries(dataCanap)){
+  //     if(product.id === id && product.colors === colors){
+  //       product.changeQuantity += quantity;
+  //       changeQuantity = true;
+  //       localStorage.setItem("arrayCanapLocal", JSON.stringify(canapeLocal));
+  //       console.log ("la boucle marche")
+  //     }
+  //   }
+
+ 
+
+  // if (canapeLocal = [] || changeQuantity == false){
+  //   canapeLocal = [];
+  //   canapeLocal.push(dataCanap);
+  //   localStorage.setItem("arrayCanapLocal", JSON.stringify(canapeLocal));
+  
+  
+  // else if(canapeLocal != null){
+  //   for (i=0; i<canapeLocal.length; i++){
+  //     let foundProduct = canapeLocal.find(p => p.id == canapeLocal.id && p.colors == canapeLocal.colors)
+  //   if (foundProduct!= undefined){
+  //     foundProduct.quantity += quantity;
+  //     localStorage.setItem("arrayCanapLocal", JSON.stringify(canapeLocal)),
+  //     (canapeLocal = JSON.parse(localStorage.getItem("arrayCanapLocal")))
+  //   }
+    
+  //   }
+  // }
+
+  // else if( canapeLocal != null){
+  //   for (i=0; i<canapeLocal.length; i++){
+  //     if(canapeLocal[i].id == id && canapeLocal[i].colors == colors){
+  //       return(
+  //         canapeLocal[i].quantity += quantity,
+  //         localStorage.setItem("arrayCanapLocal", JSON.stringify(canapeLocal)),
+  //         (canapeLocal = JSON.parse(localStorage.getItem("arrayCanapLocal")))
+  //       );       
+  //     }else {
+  //       canapeLocal.push(dataCanap);
+  //       localStorage.setItem("arrayCanapLocal", JSON.stringify(canapeLocal))
+  //     }
+  //   }
+  // } 
+ 
+  
+  //s'il y a des données on ajoute celles ci au localstorage en format JSON (.stringify)
+
+  // if(canapeLocal && changeQuantity == false){
+  //   canapeLocal.push(dataCanap);
+  //   localStorage.setItem("arrayCanapLocal", JSON.stringify(canapeLocal));
+         
+  // }
+  
+  // //si le panier et vide on ajoute les données au localstorage en format JSON (.stringify)
+  // else {
+  //   canapeLocal = [];
+  //   // changeQuantity==false;
+  //   canapeLocal.push(dataCanap);
+  //   localStorage.setItem("arrayCanapLocal", JSON.stringify(canapeLocal));
+  // }

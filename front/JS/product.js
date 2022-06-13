@@ -36,12 +36,14 @@ fetch(`http://localhost:3000/api/products/${id}`)
 
 //********************************************************************** */
 
-//Ajout d'un produit au panier
+//Ajout des produits au panier
+
+//déclaration des variables
 const btn = document.querySelector("#addToCart");
 let canapeLocal = [];
-let product = '';
-let changeQuantity = false;
+let changeCanap = true;
 
+//on écoute l'évènement au click sur le bouton et je crée les éléments nécessaires
 btn.addEventListener("click", (e) => {
   let colors = document.querySelector("#colors").value;
   let quantity = document.querySelector("#quantity").value;
@@ -51,7 +53,7 @@ btn.addEventListener("click", (e) => {
     quantity,
   };
 
-  //initialise la lecture de locastorage et converti les données en format JS avec .parse
+  //initialise la lecture de locastorage et convertit les données en format JS avec .parse
   let canapeLocal = JSON.parse(localStorage.getItem("arrayCanapLocal"));
   
   //Si aucune données n'est rentrées return[] + alert
@@ -60,154 +62,37 @@ btn.addEventListener("click", (e) => {
     return [];
   }
 
-  //Avec la fonction à l'interieur
+  // Si le tableau est vide alors on ajoute le produit et on convertit les données au format JSON avec .stringify 
   if (canapeLocal == null){
     canapeLocal = [];
     canapeLocal.push(dataCanap);
     localStorage.setItem("arrayCanapLocal", JSON.stringify(canapeLocal));
-    console.log(canapeLocal);
-  } else if (canapeLocal != null){
-      if(product.id === id && product.colors === colors){
-        for (let product of dataCanap){ 
-          product.newQuantity += quantity;
-          changeQuantity = true; 
-          console.log("quantité changée");
-          localStorage.setItem("arrayCanapLocal", JSON.stringify(canapeLocal));     
-        }
-
-      }else if (changeQuantity == false){
+  }//S'il y a un produit dont l'ID et la couleurs sont les mêmes on change la qt sans changer de produit
+  else if (canapeLocal != null){
+      canapeLocal.forEach((canap, ind) => {
+      	if (canap.id === id && canap.colors === colors) {
+      		canapeLocal[ind].quantity = quantity
+      		localStorage.setItem("arrayCanapLocal", JSON.stringify(canapeLocal))
+          changeCanap = false    
+        }       
+      })//sinon on ajoute un produit
+      if (changeCanap){
         canapeLocal.push(dataCanap);
         localStorage.setItem("arrayCanapLocal", JSON.stringify(canapeLocal));
-        (canapeLocal = JSON.parse(localStorage.getItem("arrayCanapLocal")));
-      }
+        //(canapeLocal = JSON.parse(localStorage.getItem("arrayCanapLocal")));
+        changeCanap = true;
+      }    
     }
-
-//Avec la fonction à l'exterieur
-  // if(product.id === id && product.colors === colors){
-  //   for (let product of dataCanap){
-  //     product.quantity += quantity;
-  //     changeQuantity = true;
-  //     console.log("la boucle marche");
-  //     return product.quantity;
-    
-  //   }
-  //   localStorage.setItem("arrayCanapLocal", JSON.stringify(canapeLocal));
-    
-  // }  
-
-
-  
-
-  //création d'une condition pour changer la qt sans ajouter un nouvel objet
-  //let changeQuantity = false;
-  //let product = '';
-   
-// avec cette fonction dataCanap n'est pas itérable
-  // if(product.id === id && product.colors === colors){
-  //   for (let product of dataCanap){
-  //     product.quantity += quantity;
-  //     changeQuantity = true;
-  //     console.log("la boucle marche");
-  //     return product.quantity;
-    
-  //   }
-  //   localStorage.setItem("arrayCanapLocal", JSON.stringify(canapeLocal));
-    
-  // }
-
-  //test avec object.keys
-  // for (let product of Object.keys (dataCanap)){
-  //   let changeQuantity = dataCanap[product]
-  //   if(product.id == id && product.colors == colors){
-  //     product.changeQuantity += quantity;
-  //     //changeQuantity = true;
-  //     localStorage.setItem("arrayCanapLocal", JSON.stringify(canapeLocal));
-  //     console.log ("la boucle marche")
-  //   }
-  // }
-
-  //test avec object.entries
-
-  //for (const[ product, quantity] of Object.entries(dataCanap)){
-  //     if(product.id === id && product.colors === colors){
-  //       product.changeQuantity += quantity;
-  //       changeQuantity = true;
-  //       localStorage.setItem("arrayCanapLocal", JSON.stringify(canapeLocal));
-  //       console.log ("la boucle marche")
-  //     }
-  //   }
-
- 
-
-  // if (canapeLocal = [] || changeQuantity == false){
-  //   canapeLocal = [];
-  //   canapeLocal.push(dataCanap);
-  //   localStorage.setItem("arrayCanapLocal", JSON.stringify(canapeLocal));
-  
-  
-  // else if(canapeLocal != null){
-  //   for (i=0; i<canapeLocal.length; i++){
-  //     let foundProduct = canapeLocal.find(p => p.id == canapeLocal.id && p.colors == canapeLocal.colors)
-  //   if (foundProduct!= undefined){
-  //     foundProduct.quantity += quantity;
-  //     localStorage.setItem("arrayCanapLocal", JSON.stringify(canapeLocal)),
-  //     (canapeLocal = JSON.parse(localStorage.getItem("arrayCanapLocal")))
-  //   }
-    
-  //   }
-  // }
-
-  // else if( canapeLocal != null){
-  //   for (i=0; i<canapeLocal.length; i++){
-  //     if(canapeLocal[i].id == id && canapeLocal[i].colors == colors){
-  //       return(
-  //         canapeLocal[i].quantity += quantity,
-  //         localStorage.setItem("arrayCanapLocal", JSON.stringify(canapeLocal)),
-  //         (canapeLocal = JSON.parse(localStorage.getItem("arrayCanapLocal")))
-  //       );       
-  //     }else {
-  //       canapeLocal.push(dataCanap);
-  //       localStorage.setItem("arrayCanapLocal", JSON.stringify(canapeLocal))
-  //     }
-  //   }
-  // } 
- 
-  
-  //s'il y a des données on ajoute celles ci au localstorage en format JSON (.stringify)
-
-  // if(canapeLocal && changeQuantity == false){
-  //   canapeLocal.push(dataCanap);
-  //   localStorage.setItem("arrayCanapLocal", JSON.stringify(canapeLocal));
-         
-  // }
-  
-  // //si le panier et vide on ajoute les données au localstorage en format JSON (.stringify)
-  // else {
-  //   canapeLocal = [];
-  //   // changeQuantity==false;
-  //   canapeLocal.push(dataCanap);
-  //   localStorage.setItem("arrayCanapLocal", JSON.stringify(canapeLocal));
-  // }
-
-  // if (confirm("Voulez vous aller à la page panier?")){
-  //   window.location.href = "../cart.html";
-  // }
+    //on propose au client de se rendre sur la page panier
+  if (confirm("Voulez vous aller à la page panier?")){
+    window.location.href = "../html/cart.html";
+  }//on traduit le tableau en JS avec .parse
   return (canapeLocal = JSON.parse(localStorage.getItem("arrayCanapLocal")));
   
   
 });
 
   //********************************************************************************** */
-
-  //Ajout d'une condition pour changer la qt sans ajouter un nouvel objet
-//   let changeQuantity = false;
-//   let product = '';
-//   if(product.id === id && product.colors === colors){
-//     for (let product of dataCanap){
-//       changeQuantity = true;
-//       product.quantity += quantity;
-//     }
-//   }
 
 //   //s'il y a des données on ajoute celles ci au localstorage en format JSON (.stringify)
   
@@ -269,5 +154,4 @@ btn.addEventListener("click", (e) => {
 
 // dataCanape.length === 0 || null
 
-// let canapeLocal = []
-// variable global
+
