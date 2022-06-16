@@ -211,7 +211,7 @@
 //         console.log("le canapé est ajouté !")
 //     };
 
-//      addToCart(data); //Il faut que j'arrive a appeler mes fonctions
+//      addToCart(); //Il faut que j'arrive a appeler mes fonctions
 // });
 
 // //Ajout au panier

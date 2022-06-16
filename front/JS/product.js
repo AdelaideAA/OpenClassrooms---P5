@@ -43,12 +43,13 @@ const btn = document.querySelector("#addToCart");
 let canapeLocal = [];
 let changeCanap = true;
 
+
 //on écoute l'évènement au click sur le bouton et je crée les éléments nécessaires
 btn.addEventListener("click", (e) => {
   let colors = document.querySelector("#colors").value;
   let quantity = document.querySelector("#quantity").value;
   let dataCanap = {
-    id,
+    id, 
     colors,
     quantity,
   };
@@ -93,21 +94,7 @@ btn.addEventListener("click", (e) => {
 });
 
   //********************************************************************************** */
-
-//   //s'il y a des données on ajoute celles ci au localstorage en format JSON (.stringify)
-  
-//   if(changeQuantity == false){
-//     canapeLocal = [];
-//     canapeLocal.push(dataCanap);
-//     localStorage.setItem("arrayCanapLocal", JSON.stringify(canapeLocal));
-//       //console.log(canapeLocal);
-//   }
-  
- 
-
-
-
-//DOCUMENTATION*******************************************
+//DOCUMENTATION
 //monPanier = localStorage
 
 //acceder à une donnée
