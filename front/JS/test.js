@@ -359,3 +359,5 @@
   //   canapeLocal.push(dataCanap);
   //   localStorage.setItem("arrayCanapLocal", JSON.stringify(canapeLocal));
   // }
+
+  //********************************************************************************************* */

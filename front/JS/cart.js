@@ -1,50 +1,124 @@
+let canapArray = [];
+let itemsLocal = [];
 let dataItems = document.getElementById("cart__items");
 
-function displayData (){
-  let itemsLocal = JSON.parse(localStorage.getItem("arrayCanapLocal"));
-  if (itemsLocal != null){
-    for (let i = 0; i < items.length; i++) {
-      let id = itemsLocal[i][0];
-      let colors = itemsLocal[i][1];
-      let quantity = itemsLocal[i][2];
-      fetch(`http://localhost:3000/api/products/`)//il faut que je précise l'id
-      .then(response => response.json())
-      .then (itemsFetch => {
-        if (itemsFetch.id === itemsLocal.id){
-          let dataItems="";
-      
-          dataItems.innerHTML += 
-          `<article class="cart__item" data-id="${id}" data-color="${colors}">
-             <div class="cart__item__img">
-                <img src=${itemsFetch.imageUrl} alt=${itemsFetch.altTxt}>
-              </div>
-              <div class="cart__item__content">
-                <div class="cart__item__content__description">
-                  <h2>${itemsFetch.name}</h2>
-                  <p>${colors}</p>
-                  <p>${itemsFetch.price}</p>
-                </div>
-                <div class="cart__item__content__settings">
-                  <div class="cart__item__content__settings__quantity">
-                    <p>Qté :</p>
-                    <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value=${quantity} >
-                  </div>
-                  <div class="cart__item__content__settings__delete">
-                    <p class="deleteItem">Supprimer</p>
-                  </div>
-                </div>
-              </div>
-            </article>`
-        }
 
-      })
-  
-  
-  
-    }
-
-  }
+if (localStorage.getItem("arrayCanapLocal") === null || localStorage.getItem("arrayCanapLocal") < 1) {
+  console.log("votre panier est vide");//à afficher sur la page et a styliser
+}else{
+  console.log("il y a des produits dans le panier");
+  //findCanap();
+  findFetch();   
 }
+
+
+function findCanap(){
+  itemsLocal = JSON.parse(localStorage.getItem("arrayCanapLocal"));
+  
+}
+
+function findFetch() {
+  fetch("http://localhost:3000/api/products")
+     .then(response => response.json())
+     .then (jsonListSofa =>{
+        canapArray = jsonListSofa;
+        findCanap();
+        itemsLocal.forEach((itemInLocalStorage) => {
+          const allItems = canapArray.find((data) => data._id == itemInLocalStorage.id)
+        
+          dataItems.innerHTML +=
+          `<article class="cart__item" data-id="${itemInLocalStorage.id}" data-color="${itemInLocalStorage.colors}">
+            <div class="cart__item__img">
+              <img src=${allItems.imageUrl} alt=${allItems.altTxt}>
+            </div>
+            <div class="cart__item__content">
+              <div class="cart__item__content__description">
+                <h2>${allItems.name}</h2>
+                <p>${itemInLocalStorage.colors}</p>
+                <p>${allItems.price}</p>
+              </div>
+              <div class="cart__item__content__settings">
+                <div class="cart__item__content__settings__quantity">
+                  <p>Qté :</p>
+                  <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value=${itemInLocalStorage.quantity} >
+                </div>
+                <div class="cart__item__content__settings__delete">
+                  <p class="deleteItem">Supprimer</p>
+                </div>
+              </div>
+            </div>
+          </article>` 
+        })
+        .catch((err) => {//il y a un message d'erreur sur la consonsole il faut chager ce catch
+            console.log(err);
+          });    
+    })
+     
+}
+//****************************************************************************** */
+//fonctionne mais inverse les données...
+
+// let canapArray = [];
+// let itemsLocal = [];
+// let dataItems = document.getElementById("cart__items");
+
+
+// if (localStorage.getItem("arrayCanapLocal") === null || localStorage.getItem("arrayCanapLocal") < 1) {
+//   console.log("votre panier est vide");//à afficher sur la page
+// }else{
+//   console.log("il y a des produits dans le panier");
+//   findCanap();
+//   findFetch();   
+// }
+
+
+// function findCanap(){
+//   itemsLocal = JSON.parse(localStorage.getItem("arrayCanapLocal"));
+  // for (let i = 0; i < itemsLocal.length; i++){
+  //   //console.log(itemsLocal[i]);
+  // }
+  
+// }
+// function findFetch() {
+//   fetch("http://localhost:3000/api/products")
+//      .then(response => response.json())
+//      .then (jsonListSofa =>{
+//         canapArray = jsonListSofa;
+//         findCanap();
+        // for (let i = 0; i < itemsLocal.length; i++){
+        //     if(canapArray._id === itemsLocal.id){
+        //       console.log(canapArray[i] , itemsLocal[i]);
+              // dataItems.innerHTML += 
+  // `<article class="cart__item" data-id="${itemsLocal[i].id}" data-color="${itemsLocal[i].colors}">
+  //    <div class="cart__item__img">
+  //       <img src=${canapArray[i].imageUrl} alt=${canapArray[i].altTxt}>
+  //     </div>
+  //     <div class="cart__item__content">
+  //       <div class="cart__item__content__description">
+  //         <h2>${canapArray[i].name}</h2>
+  //         <p>${itemsLocal[i].colors}</p>
+  //         <p>${canapArray[i].price}</p>
+  //       </div>
+  //       <div class="cart__item__content__settings">
+  //         <div class="cart__item__content__settings__quantity">
+  //           <p>Qté :</p>
+  //           <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value=${itemsLocal[i].quantity} >
+  //         </div>
+  //         <div class="cart__item__content__settings__delete">
+  //           <p class="deleteItem">Supprimer</p>
+  //         </div>
+  //       </div>
+  //     </div>
+  //   </article>` 
+//}
+
+
+
+
+
+
+
+
 
 
 //******************************************************************************************* */
@@ -112,43 +186,7 @@ function displayData (){
 
 //********************************************************************************************** */
 
-// let itemsLocal = JSON.parse(localStorage.getItem("arrayCanapLocal"));
-//   if (itemsLocal != null){
-//     console.log("Il y a des canapés");
-//     //return JSON.parse(itemsLocal); Le return ne fonctionne pas 
-//   }else{
-//     console.log("Le panier est vide !");//J'aimerai afficher ce texte sur la page
-//   } 
 
-
-// let dataItemsLocal = "";
-// itemsLocal.map((values) =>{
-//     dataItemsLocal+=  
-//         `<article class="cart__item" data-id="${values.id}" data-color="${values.colors}">
-//              <div class="cart__item__img">
-//                <img src=${values.imageUrl} alt=${values.altTxt}>
-//              </div>
-//              <div class="cart__item__content">
-//                <div class="cart__item__content__description">
-//                  <h2>${values.name}</h2>
-//                  <p>${values.colors}</p>
-//                  <p>${values.price}</p>
-//               </div>
-//                <div class="cart__item__content__settings">
-//                  <div class="cart__item__content__settings__quantity">
-//                    <p>Qté :</p>
-//                    <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value=${values.quantity} >
-//                  </div>
-//                  <div class="cart__item__content__settings__delete">
-//                    <p class="deleteItem">Supprimer</p>
-//                  </div>
-//                </div>
-//              </div>
-//            </article>`
-           
-//           document.getElementById("cart__items").innerHTML = dataItemsLocal; 
-    
-// })
 
 
 
