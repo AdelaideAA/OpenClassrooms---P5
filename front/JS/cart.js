@@ -1,14 +1,21 @@
 let canapArray = [];
 let itemsLocal = [];
 let dataItems = document.getElementById("cart__items");
+let total = 0;
+let numberProduct = 0;
+
+
 
 
 if (localStorage.getItem("arrayCanapLocal") === null || localStorage.getItem("arrayCanapLocal") < 1) {
   console.log("votre panier est vide");//à afficher sur la page et a styliser
 }else{
   console.log("il y a des produits dans le panier");
-  //findCanap();
-  findFetch();   
+  
+  findFetch();
+  getNumberProduct();
+  //getPriceProduct()
+    
 }
 
 
@@ -22,6 +29,7 @@ function findFetch() {
      .then(response => response.json())
      .then (jsonListSofa =>{
         canapArray = jsonListSofa;
+        
         findCanap();
         itemsLocal.forEach((itemInLocalStorage) => {
           const allItems = canapArray.find((data) => data._id == itemInLocalStorage.id)
@@ -47,14 +55,52 @@ function findFetch() {
                 </div>
               </div>
             </div>
-          </article>` 
-        })
-        .catch((err) => {//il y a un message d'erreur sur la consonsole il faut chager ce catch
-            console.log(err);
-          });    
+          </article>`
+          
+            total += itemInLocalStorage.quantity * allItems.price;
+            console.log(total);
+            
+         }) 
+             
+        // .catch((err) => {//il y a un message d'erreur sur la consonsole il faut chager ce catch
+        //     console.log(err);
+        //   });    
     })
      
 }
+
+document.getElementById("totalprice").textContent = total;
+console.log(total);
+
+function getNumberProduct(){
+    findCanap();
+    for (let product of itemsLocal){
+      numberProduct += (Number(product.quantity));
+    }
+    document.getElementById("totalQuantity").textContent = numberProduct;     
+};
+
+// function getPriceProduct(){
+//   getNumberProduct();
+//   //findCanap();
+//   //findFetch();
+   
+//   for (let product of canapArray){
+//   console.log(product);
+//     // total += itemsLocal.quantity * product.price;
+//     // document.getElementById("totalprice").textContent = total;
+//   } 
+
+// }
+
+
+
+
+
+
+
+
+//Supprimer
 //****************************************************************************** */
 //fonctionne mais inverse les données...
 
