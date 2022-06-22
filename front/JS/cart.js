@@ -10,11 +10,10 @@ if (
 ) {
   console.log("votre panier est vide"); //à afficher sur la page et a styliser
 } else {
-  console.log("il y a des produits dans le panier");
+  //console.log("il y a des produits dans le panier");
 
   findFetch();
   getNumberProduct();
-  
 }
 
 function findCanap() {
@@ -58,8 +57,8 @@ function findFetch() {
         //Calcul du prix
         total += itemInLocalStorage.quantity * allItems.price;
         document.getElementById("totalPrice").textContent = total;
-        
-          //Ecoute et conserve les nouvelles quantité
+
+        //Ecoute et conserve les nouvelles quantité
         let listDbtn = document.getElementsByClassName("itemQuantity");
 
         for (let index = 0; index < listDbtn.length; index++) {
@@ -70,12 +69,13 @@ function findFetch() {
             console.log(id);
             console.log(color);
             for (let i = 0; i < listDbtn.length; i++) {
+              console.log(listDbtn);
               if (
-                id == itemInLocalStorage.id &&
-                color == itemInLocalStorage.colors
+                id === itemInLocalStorage.id &&
+                color === itemInLocalStorage.colors
               ) {
                 itemInLocalStorage.quantity = e.target.value;
-                //document.location.reload(true);
+                document.location.reload(true);
                 localStorage.setItem(
                   "arrayCanapLocal",
                   JSON.stringify(itemsLocal)
@@ -84,10 +84,9 @@ function findFetch() {
             }
           });
         }
-        
+
         //Supprime le produit
         deleteArticle();
-        
       });
       // .catch(function(err) {//il y a un message d'erreur sur la consonsole il faut changer ce catch
       //   console.log(err);
@@ -95,18 +94,13 @@ function findFetch() {
     });
 }
 
-
-
-
-
-
 //Supprime un article
-function deleteArticle(){
+function deleteArticle() {
   let deleteItem = document.querySelectorAll(".deleteItem");
   for (let i = 0; i < deleteItem.length; i++) {
     deleteItem[i].addEventListener("click", (event) => {
       event.preventDefault();
-      itemsLocal.splice([i],1);
+      itemsLocal.splice([i], 1);
       document.location.reload();
       localStorage.setItem("arrayCanapLocal", JSON.stringify(itemsLocal));
     });
@@ -121,6 +115,135 @@ function getNumberProduct() {
   }
   document.getElementById("totalQuantity").textContent = numberProduct;
 }
+
+//FORMULAIRE *************/regex addres à modifier
+
+let firstName = document.getElementById("firstName");
+let lastName = document.getElementById("lastName");
+let address = document.getElementById("address");
+let city = document.getElementById("city");
+let email = document.getElementById("email");
+
+//regex
+let regExpName = new RegExp("^[A-Za-z'-àáâãäåçèéêëìíîïðòóôõöùúûüýÿ]{2,25}$");
+let regExpEmail = new RegExp(
+  "^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$"
+);
+let regExpAddress = new RegExp("^[a-zA-Z0-9,.'-/s*]+$"); //regex a corriger l'espace ne fonctionne pas
+
+//Ecoute le changement et valide les champs du formulaire
+firstName.addEventListener("change", () => {
+  let p = document.getElementById("firstNameErrorMsg");
+
+  if (regExpName.test(firstName.value)) {
+    p.innerHTML = "Prénom valide";
+  } else {
+    p.innerHTML = "Prénom non valide";
+  }
+});
+
+lastName.addEventListener("change", () => {
+  let p = document.getElementById("lastNameErrorMsg");
+  if (regExpName.test(lastName.value)) {
+    p.innerHTML = "Nom valide";
+  } else {
+    p.innerHTML = "Nom non valide";
+  }
+});
+
+address.addEventListener("change", () => {
+  let p = document.getElementById("addressErrorMsg");
+
+  if (regExpAddress.test(address.value)) {
+    p.innerHTML = "Adresse valide";
+  } else {
+    p.innerHTML = "Adresse non valide";
+  }
+});
+
+city.addEventListener("change", () => {
+  let p = document.getElementById("cityErrorMsg");
+
+  if (regExpName.test(city.value)) {
+    p.innerHTML = "Ville valide";
+  } else {
+    p.innerHTML = "Ville non valide";
+  }
+});
+
+email.addEventListener("change", () => {
+  let p = document.getElementById("emailErrorMsg");
+
+  if (regExpEmail.test(email.value)) {
+    p.innerHTML = "Adresse Valide";
+  } else {
+    p.innerHTML = "Adresse non valide";
+  }
+});
+
+// création de l'objet contact au click sur le bouton Commander
+
+let order = document.getElementById("order");
+
+order.addEventListener("click", (e) => {
+  e.preventDefault();
+  let contact = {
+    firstName: firstName.value,
+    lastName: lastName.value,
+    address: address.value,
+    city: city.value,
+    email: email.value,
+  };
+  //console.log(contact);
+  if (
+    firstName.value == "" ||
+    lastName.value == "" ||
+    address.value == "" ||
+    city.value == "" ||
+    email.value == ""
+  ) {
+    alert("Un des champs du formulaire n'est pas completé");
+  } else if (
+    regExpName.test(firstName.value) == false ||
+    regExpName.test(lastName.value) == false ||
+    regExpAddress.test(address.value) == false ||
+    regExpName.test(city.value) == false ||
+    regExpEmail.test(email.value) == false
+  ) {
+    alert("Un des champs du formulaire n'est pas valide !");
+  } else {
+    let products = [];
+
+    itemsLocal.forEach((order) => {
+      //console.log("log de items local", itemsLocal);
+      products.push(order.id);
+      //console.log("log de products", products);
+      //console.log("log de order.id", order.id);
+    });
+    let confirmOrder = { contact, products };
+
+    // je renvoi les données vers le serveur avec fetch et j'ajoute l'id de commande dans l'url
+    fetch("http://localhost:3000/api/products/order", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(confirmOrder),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        window.location.href = "./confirmation.html?orderId=" + data.orderId;
+        //console.log(data.orderId)
+        window.localStorage.clear();
+      })
+      .catch((error) => {
+        alert(
+          "Le serveur ne répond pas, si ce problème persiste, contacter: support@name.com"
+        );
+      });
+  }
+});
 
 //*********************************             V2             ********************************************************** */
 //initialise la lecture du localstorage et récupère les données en format JS
