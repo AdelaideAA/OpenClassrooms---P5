@@ -1,15 +1,17 @@
-//declaration des variables globales
+//**********Afficher les produits sur la page panier*********/
+
+//déclaration des variables globales
 let canapArray = [];
 let itemsLocal = [];
 let dataItems = document.getElementById("cart__items");
 let total = 0;
 let numberProduct = 0;
 
+//Si le panier est vide -> afficher un message sinon appel des fonction pour afficher les produits
 if (
-  localStorage.getItem("arrayCanapLocal") === null ||
-  localStorage.getItem("arrayCanapLocal") < 1
+  localStorage.getItem('arrayCanapLocal') === null ||
+	JSON.parse(localStorage.getItem('arrayCanapLocal')).length < 1
 ) {
-  console.log("votre panier est vide");
   document.querySelector("#cart__items").innerHTML = `
   <div class = 'cart__none'>
       <p id ='panierVide' style='text-align: center; font-weight: bold; font-size:25px; color: #FFFFF'>
@@ -21,22 +23,24 @@ if (
   getNumberProduct();
 }
 
+//récupère les produits stockés dans le localstorage
 function findCanap() {
   itemsLocal = JSON.parse(localStorage.getItem("arrayCanapLocal"));
 }
 
+//Récupère les données de l'api pour completer celle du localstorage
 function findFetch() {
   fetch("http://localhost:3000/api/products")
     .then((response) => response.json())
     .then((jsonListSofa) => {
       canapArray = jsonListSofa;
-
+      //boucle + méthode .find pour faire correspondre les produits grâce aux id
       itemsLocal
         .forEach((itemInLocalStorage) => {
           const allItems = canapArray.find(
             (data) => data._id == itemInLocalStorage.id
           );
-
+            //Créer le contenu html en affichant les éléments de l'api et du localStorage
           dataItems.innerHTML += `<article class="cart__item" data-id="${itemInLocalStorage.id}" data-color="${itemInLocalStorage.colors}">
             <div class="cart__item__img">
               <img src=${allItems.imageUrl} alt=${allItems.altTxt}>
@@ -64,22 +68,22 @@ function findFetch() {
           document.getElementById("totalPrice").textContent = total;
 
           //Ecoute et conserve les nouvelles quantité
-          let listDbtn = document.getElementsByClassName("itemQuantity");
+          let listDeBtn = document.getElementsByClassName("itemQuantity");
 
-          for (let index = 0; index < listDbtn.length; index++) {
-            let element = listDbtn[index];
+          for (let index = 0; index < listDeBtn.length; index++) {
+            let element = listDeBtn[index];
             element.addEventListener("change", (e) => {
               id = element.closest("[data-id]").dataset.id;
               color = element.closest("[data-color]").dataset.color;
               console.log(id);
               console.log(color);
-              for (let i = 0; i < listDbtn.length; i++) {
-                console.log(listDbtn);
+              for (let i = 0; i < itemsLocal.length; i++) {
+                let btn = itemsLocal[i]
                 if (
-                  id === itemInLocalStorage.id &&
-                  color === itemInLocalStorage.colors
+                  id === itemsLocal[i].id &&
+                  color === itemsLocal[i].colors
                 ) {
-                  itemInLocalStorage.quantity = e.target.value;
+                  itemsLocal[i].quantity = e.target.value;
                   document.location.reload();
                   localStorage.setItem(
                     "arrayCanapLocal",
@@ -89,13 +93,10 @@ function findFetch() {
               }
             });
           }
-
-          //Supprime le produit
           deleteArticle();
-        })
-        // .catch((err) => {
-        //   //console.log(err); Voir avec Martin
-        // });
+        }) 
+    }).catch((err) => {
+      console.log(err);
     });
 }
 
@@ -121,18 +122,18 @@ function getNumberProduct() {
   document.getElementById("totalQuantity").textContent = numberProduct;
 }
 
-//FORMULAIRE *************/regex addres à modifier
-
+//********************FORMULAIRE ***********************/
+//Variables globales
 let firstName = document.getElementById("firstName");
 let lastName = document.getElementById("lastName");
 let address = document.getElementById("address");
 let city = document.getElementById("city");
 let email = document.getElementById("email");
 
-//regex
+//Variables de regexp
 let regExpName = new RegExp(/^[A-Za-zàáâãäåçèéêëìíîïðòóôõöùúûüýÿ\s'-]+$/);
 let regExpEmail = new RegExp(
-  /"^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$"/
+  /^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$/
 );
 let regExpAddress = new RegExp(/^[a-zA-Z0-9\s-',]+$/); 
 
@@ -186,7 +187,7 @@ email.addEventListener("change", () => {
   }
 });
 
-// création de l'objet contact au click sur le bouton Commander
+// Ecoute le click sur le bouton Commander et créer un objet contact
 
 let order = document.getElementById("order");
 
@@ -199,7 +200,7 @@ order.addEventListener("click", (e) => {
     city: city.value,
     email: email.value,
   };
-  //console.log(contact);
+  // Si le panier est vide ou si l'un des champs du formulaire est mal renseigné ou vide -> affiche une alerte 
   if (
     firstName.value == "" ||
     lastName.value == "" ||
@@ -208,7 +209,12 @@ order.addEventListener("click", (e) => {
     email.value == ""
   ) {
     alert("Un des champs du formulaire n'est pas completé");
-  } else if (
+  }else if (
+		localStorage.getItem('arrayCanapLocal') === null ||
+		JSON.parse(localStorage.getItem('arrayCanapLocal')).length < 1
+	) {
+		alert('Votre panier est vide! Veuillez choisir des produits pour passer commande.')
+	} else if (
     regExpName.test(firstName.value) == false ||
     regExpName.test(lastName.value) == false ||
     regExpAddress.test(address.value) == false ||
@@ -216,18 +222,18 @@ order.addEventListener("click", (e) => {
     regExpEmail.test(email.value) == false
   ) {
     alert("Un des champs du formulaire n'est pas valide !");
-  } else {
+  } //Sinon je crée un tableau qui va contenir les données du storage(vérification grâce à l'id)
+    else {
     let products = [];
 
     itemsLocal.forEach((order) => {
-      //console.log("log de items local", itemsLocal);
       products.push(order.id);
-      //console.log("log de products", products);
-      //console.log("log de order.id", order.id);
-    });
-    let confirmOrder = { contact, products };
 
-    // je renvoi les données vers le serveur avec fetch et j'ajoute l'id de commande dans l'url
+    });
+    //Je crée un objet où il y a les données du formulaire et les données du storage
+    let confirmOrder = {contact, products};
+
+    // et je renvoi cet objet en JSON vers le serveur avec fetch  
     fetch("http://localhost:3000/api/products/order", {
       method: "POST",
       headers: {
@@ -238,11 +244,13 @@ order.addEventListener("click", (e) => {
     })
       .then((response) => response.json())
       .then((data) => {
+        //j'ajoute l'id de commande dans l'url de la page de confirmation
         window.location.href = "./confirmation.html?orderId=" + data.orderId;
-        //console.log(data.orderId)
+        // et j'efface le localstorage
         window.localStorage.clear();
       })
       .catch((error) => {
+        console.log(error);
         alert(
           "Nous ne pouvons pas valider la commande, merci de réessayer plus tard"
         );
