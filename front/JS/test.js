@@ -181,6 +181,53 @@
 //****************************************************************************** */
 // Ajouter au panier
 
+//DOCUMENTATION
+//monPanier = localStorage
+
+//acceder à une donnée
+// localStorage.setItem('myCat', 'cookie');
+// localStorage.setItem('myDog', 'Pepette');
+// localStorage.setItem('myFish', 'Albert');
+// //récuperer une donnée
+// let cat = localStorage.getItem('myCat');
+// console.log(cat)
+// //supprimer une donnée
+// localStorage.removeItem('myDog');
+
+//pour obtenir le nbr de clé
+//localStorage.length;
+
+//pour obtenir les clés
+// for( let i = 0; i < localStorage.length; i++){
+//     localStorage.key(i);
+// }
+
+//stockage des données
+//let objJson = {
+//     prenom : "dany",
+//     age : 30,
+//     taille : 170
+// }
+// let objLinea = JSON.stringify(objJson); la fonction JSON.stringify permet de transformer l'objet js en format Json
+// localStorage.setItem("obj",objLinea); La méthode setItem() de l'interface Storage, lorsque lui sont passées le duo clé-valeur, les ajoute à l'emplacement de stockage, sinon elle met à jour la valeur si la clé existe déjà.
+
+//faire un [array] du panier qui contiendra : l'id + la qt + la couleur
+//localStorage (est une api) pour pouvoir acceder au tableau depuis la page panier
+//si on ajoute(.push) un produit dans le panier on l'ajoute au [tableau]
+//si on ajoute un produit existant on incrémente la qt du produit qui est dans l'array
+
+// documentation Martin
+// dataCanape: [
+//     {colors: "Black/Yellow"
+//     id: "415b7cacb65d43b2b5c1ff70f3393ad1"
+//     quantity: "1"},
+//     {colors: "Green"
+//     id: "4gdfhdfghdfgh54545d43b2b5c1ff70f3393ad1"
+//     quantity: "2"},
+// ]
+
+// dataCanape.length === 0 || null
+
 //sauvegarder le panier
 // let canapeLocal = [];
 // const btn = document.querySelector("#addToCart");

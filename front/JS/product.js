@@ -9,9 +9,9 @@ let id = urlParams.get("id");
 
 fetch(`http://localhost:3000/api/products/${id}`)
   .then((response) => response.json())
-  //Je nomme ma fonction products
+  //Je nomme ma fonction products pour dispatcher les données sur les bons éléments
   .then((products) => {
-    //création de l'élement <img> + correspondance entre les données de products et les éléments + création des variables Parents
+    //création de l'élement <img> + création des variables Parents
     let image = document.createElement("img");
     image.src = products.imageUrl;
     image.alt = products.altTxt;
@@ -43,102 +43,49 @@ const btn = document.querySelector("#addToCart");
 let canapeLocal = [];
 let changeCanap = true;
 
-
 //on écoute l'évènement au click sur le bouton et je crée les éléments nécessaires
 btn.addEventListener("click", (e) => {
   let colors = document.querySelector("#colors").value;
   let quantity = document.querySelector("#quantity").value;
+  //objet qui sera enregistré dans localStorage
   let dataCanap = {
-    id, 
+    id,
     colors,
     quantity,
   };
 
   //initialise la lecture de locastorage et convertit les données en format JS avec .parse
   let canapeLocal = JSON.parse(localStorage.getItem("arrayCanapLocal"));
-  
+
   //Si aucune données n'est rentrées return[] + alert
   if (colors == null || colors === "" || quantity == null || quantity == 0) {
     alert("Veuillez choisir une couleur et une quantité");
     return [];
   }
 
-  // Si le tableau est vide alors on ajoute le produit et on convertit les données au format JSON avec .stringify 
-  if (canapeLocal == null){
+  // Si le tableau est vide alors on ajoute le produit et on convertit les données au format JSON avec .stringify
+  if (canapeLocal == null) {
     canapeLocal = [];
     canapeLocal.push(dataCanap);
     localStorage.setItem("arrayCanapLocal", JSON.stringify(canapeLocal));
-  }//S'il y a un produit dont l'ID et la couleurs sont les mêmes on change la qt sans changer de produit
-  else if (canapeLocal != null){
-      canapeLocal.forEach((canap, ind) => {
-      	if (canap.id === id && canap.colors === colors) {
-      		canapeLocal[ind].quantity = quantity
-      		localStorage.setItem("arrayCanapLocal", JSON.stringify(canapeLocal))
-          changeCanap = false    
-        }       
-      })//sinon on ajoute un produit
-      if (changeCanap){
-        canapeLocal.push(dataCanap);
+  } //S'il y a un produit dont l'ID et la couleurs sont les mêmes on change la qt sans changer de produit
+  else if (canapeLocal != null) {
+    canapeLocal.forEach((canap, ind) => {
+      if (canap.id === id && canap.colors === colors) {
+        canapeLocal[ind].quantity = quantity;
         localStorage.setItem("arrayCanapLocal", JSON.stringify(canapeLocal));
-        //(canapeLocal = JSON.parse(localStorage.getItem("arrayCanapLocal")));
-        changeCanap = true;
-      }    
+        changeCanap = false;
+      }
+    }); //sinon on ajoute un produit
+    if (changeCanap) {
+      canapeLocal.push(dataCanap);
+      localStorage.setItem("arrayCanapLocal", JSON.stringify(canapeLocal));
+      changeCanap = true;
     }
-    //on propose au client de se rendre sur la page panier
-  if (confirm("Voulez vous aller à la page panier?")){
+  }
+  //on propose au client de se rendre sur la page panier
+  if (confirm("Voulez vous aller à la page panier?")) {
     window.location.href = "../html/cart.html";
-  }//on traduit le tableau en JS avec .parse
+  } //on traduit le tableau en JS avec .parse
   return (canapeLocal = JSON.parse(localStorage.getItem("arrayCanapLocal")));
-  
-  
 });
-
-  //********************************************************************************** */
-//DOCUMENTATION
-//monPanier = localStorage
-
-//acceder à une donnée
-// localStorage.setItem('myCat', 'cookie');
-// localStorage.setItem('myDog', 'Pepette');
-// localStorage.setItem('myFish', 'Albert');
-// //récuperer une donnée
-// let cat = localStorage.getItem('myCat');
-// console.log(cat)
-// //supprimer une donnée
-// localStorage.removeItem('myDog');
-
-//pour obtenir le nbr de clé
-//localStorage.length;
-
-//pour obtenir les clés
-// for( let i = 0; i < localStorage.length; i++){
-//     localStorage.key(i);
-// }
-
-//stockage des données
-//let objJson = {
-//     prenom : "dany",
-//     age : 30,
-//     taille : 170
-// }
-// let objLinea = JSON.stringify(objJson); la fonction JSON.stringify permet de transformer l'objet js en format Json
-// localStorage.setItem("obj",objLinea); La méthode setItem() de l'interface Storage, lorsque lui sont passées le duo clé-valeur, les ajoute à l'emplacement de stockage, sinon elle met à jour la valeur si la clé existe déjà.
-
-//faire un [array] du panier qui contiendra : l'id + la qt + la couleur
-//localStorage (est une api) pour pouvoir acceder au tableau depuis la page panier
-//si on ajoute(.push) un produit dans le panier on l'ajoute au [tableau]
-//si on ajoute un produit existant on incrémente la qt du produit qui est dans l'array
-
-// documentation Martin
-// dataCanape: [
-//     {colors: "Black/Yellow"
-//     id: "415b7cacb65d43b2b5c1ff70f3393ad1"
-//     quantity: "1"},
-//     {colors: "Green"
-//     id: "4gdfhdfghdfgh54545d43b2b5c1ff70f3393ad1"
-//     quantity: "2"},
-// ]
-
-// dataCanape.length === 0 || null
-
-

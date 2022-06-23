@@ -1,3 +1,4 @@
+//declaration des variables globales
 let canapArray = [];
 let itemsLocal = [];
 let dataItems = document.getElementById("cart__items");
@@ -8,10 +9,14 @@ if (
   localStorage.getItem("arrayCanapLocal") === null ||
   localStorage.getItem("arrayCanapLocal") < 1
 ) {
-  console.log("votre panier est vide"); //à afficher sur la page et a styliser
+  console.log("votre panier est vide");
+  document.querySelector("#cart__items").innerHTML = `
+  <div class = 'cart__none'>
+      <p id ='panierVide' style='text-align: center; font-weight: bold; font-size:25px; color: #FFFFF'>
+      Votre panier est vide !</p>
+  </div>`;
 } else {
-  //console.log("il y a des produits dans le panier");
-
+  findCanap();
   findFetch();
   getNumberProduct();
 }
@@ -26,13 +31,13 @@ function findFetch() {
     .then((jsonListSofa) => {
       canapArray = jsonListSofa;
 
-      findCanap();
-      itemsLocal.forEach((itemInLocalStorage) => {
-        const allItems = canapArray.find(
-          (data) => data._id == itemInLocalStorage.id
-        );
+      itemsLocal
+        .forEach((itemInLocalStorage) => {
+          const allItems = canapArray.find(
+            (data) => data._id == itemInLocalStorage.id
+          );
 
-        dataItems.innerHTML += `<article class="cart__item" data-id="${itemInLocalStorage.id}" data-color="${itemInLocalStorage.colors}">
+          dataItems.innerHTML += `<article class="cart__item" data-id="${itemInLocalStorage.id}" data-color="${itemInLocalStorage.colors}">
             <div class="cart__item__img">
               <img src=${allItems.imageUrl} alt=${allItems.altTxt}>
             </div>
@@ -54,43 +59,43 @@ function findFetch() {
             </div>
           </article>`;
 
-        //Calcul du prix
-        total += itemInLocalStorage.quantity * allItems.price;
-        document.getElementById("totalPrice").textContent = total;
+          //Calcul du prix
+          total += itemInLocalStorage.quantity * allItems.price;
+          document.getElementById("totalPrice").textContent = total;
 
-        //Ecoute et conserve les nouvelles quantité
-        let listDbtn = document.getElementsByClassName("itemQuantity");
+          //Ecoute et conserve les nouvelles quantité
+          let listDbtn = document.getElementsByClassName("itemQuantity");
 
-        for (let index = 0; index < listDbtn.length; index++) {
-          let element = listDbtn[index];
-          element.addEventListener("change", (e) => {
-            id = element.closest("[data-id]").dataset.id;
-            color = element.closest("[data-color]").dataset.color;
-            console.log(id);
-            console.log(color);
-            for (let i = 0; i < listDbtn.length; i++) {
-              console.log(listDbtn);
-              if (
-                id === itemInLocalStorage.id &&
-                color === itemInLocalStorage.colors
-              ) {
-                itemInLocalStorage.quantity = e.target.value;
-                document.location.reload(true);
-                localStorage.setItem(
-                  "arrayCanapLocal",
-                  JSON.stringify(itemsLocal)
-                );
+          for (let index = 0; index < listDbtn.length; index++) {
+            let element = listDbtn[index];
+            element.addEventListener("change", (e) => {
+              id = element.closest("[data-id]").dataset.id;
+              color = element.closest("[data-color]").dataset.color;
+              console.log(id);
+              console.log(color);
+              for (let i = 0; i < listDbtn.length; i++) {
+                console.log(listDbtn);
+                if (
+                  id === itemInLocalStorage.id &&
+                  color === itemInLocalStorage.colors
+                ) {
+                  itemInLocalStorage.quantity = e.target.value;
+                  document.location.reload();
+                  localStorage.setItem(
+                    "arrayCanapLocal",
+                    JSON.stringify(itemsLocal)
+                  );
+                }
               }
-            }
-          });
-        }
+            });
+          }
 
-        //Supprime le produit
-        deleteArticle();
-      });
-      // .catch(function(err) {//il y a un message d'erreur sur la consonsole il faut changer ce catch
-      //   console.log(err);
-      // });
+          //Supprime le produit
+          deleteArticle();
+        })
+        // .catch((err) => {
+        //   //console.log(err); Voir avec Martin
+        // });
     });
 }
 
@@ -125,11 +130,11 @@ let city = document.getElementById("city");
 let email = document.getElementById("email");
 
 //regex
-let regExpName = new RegExp("^[A-Za-z'-àáâãäåçèéêëìíîïðòóôõöùúûüýÿ]{2,25}$");
+let regExpName = new RegExp(/^[A-Za-zàáâãäåçèéêëìíîïðòóôõöùúûüýÿ\s'-]+$/);
 let regExpEmail = new RegExp(
-  "^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$"
+  /"^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$"/
 );
-let regExpAddress = new RegExp("^[a-zA-Z0-9,.'-/s*]+$"); //regex a corriger l'espace ne fonctionne pas
+let regExpAddress = new RegExp(/^[a-zA-Z0-9\s-',]+$/); 
 
 //Ecoute le changement et valide les champs du formulaire
 firstName.addEventListener("change", () => {
@@ -239,7 +244,7 @@ order.addEventListener("click", (e) => {
       })
       .catch((error) => {
         alert(
-          "Le serveur ne répond pas, si ce problème persiste, contacter: support@name.com"
+          "Nous ne pouvons pas valider la commande, merci de réessayer plus tard"
         );
       });
   }
@@ -304,14 +309,3 @@ order.addEventListener("click", (e) => {
 // }
 
 //********************************************************************************************** */
-
-//faire une fonction pour récuperer localstorage
-//faire une fonction pour récuperer fetch
-//faire une boucle pour vérifier si l'id est le même sur fetch et localstorage
-//assembler le html avec les bonnes valeurs
-//il faut a nouveau pouvoir changer la qt
-//faire une fonction pour faire fonctionner le bouton supprimer
-//faire une fonction pour additionner les prix
-// //documentation
-// //const text = "apparait"
-// //div1.textContent = `c'est moi qui ${text}!`
