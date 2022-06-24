@@ -9,8 +9,8 @@ let numberProduct = 0;
 
 //Si le panier est vide -> afficher un message sinon appel des fonction pour afficher les produits
 if (
-  localStorage.getItem('arrayCanapLocal') === null ||
-	JSON.parse(localStorage.getItem('arrayCanapLocal')).length < 1
+  localStorage.getItem("arrayCanapLocal") === null ||
+  JSON.parse(localStorage.getItem("arrayCanapLocal")).length < 1
 ) {
   document.querySelector("#cart__items").innerHTML = `
   <div class = 'cart__none'>
@@ -35,13 +35,12 @@ function findFetch() {
     .then((jsonListSofa) => {
       canapArray = jsonListSofa;
       //boucle + méthode .find pour faire correspondre les produits grâce aux id
-      itemsLocal
-        .forEach((itemInLocalStorage) => {
-          const allItems = canapArray.find(
-            (data) => data._id == itemInLocalStorage.id
-          );
-            //Créer le contenu html en affichant les éléments de l'api et du localStorage
-          dataItems.innerHTML += `<article class="cart__item" data-id="${itemInLocalStorage.id}" data-color="${itemInLocalStorage.colors}">
+      itemsLocal.forEach((itemInLocalStorage) => {
+        const allItems = canapArray.find(
+          (data) => data._id == itemInLocalStorage.id
+        );
+        //Créer le contenu html en affichant les éléments de l'api et du localStorage
+        dataItems.innerHTML += `<article class="cart__item" data-id="${itemInLocalStorage.id}" data-color="${itemInLocalStorage.colors}">
             <div class="cart__item__img">
               <img src=${allItems.imageUrl} alt=${allItems.altTxt}>
             </div>
@@ -63,41 +62,36 @@ function findFetch() {
             </div>
           </article>`;
 
-          //Calcul du prix
-          total += itemInLocalStorage.quantity * allItems.price;
-          document.getElementById("totalPrice").textContent = total;
+        //Calcul du prix
+        total += itemInLocalStorage.quantity * allItems.price;
+        document.getElementById("totalPrice").textContent = total;
 
-          //Ecoute et conserve les nouvelles quantité
-          let listDeBtn = document.getElementsByClassName("itemQuantity");
-
-          for (let index = 0; index < listDeBtn.length; index++) {
-            let element = listDeBtn[index];
-            element.addEventListener("change", (e) => {
-              id = element.closest("[data-id]").dataset.id;
-              color = element.closest("[data-color]").dataset.color;
-              console.log(id);
-              console.log(color);
-              for (let i = 0; i < itemsLocal.length; i++) {
-                let btn = itemsLocal[i]
-                if (
-                  id === itemsLocal[i].id &&
-                  color === itemsLocal[i].colors
-                ) {
-                  itemsLocal[i].quantity = e.target.value;
-                  document.location.reload();
-                  localStorage.setItem(
-                    "arrayCanapLocal",
-                    JSON.stringify(itemsLocal)
-                  );
-                }
-              }
-            });
-          }
-          deleteArticle();
-        }) 
-    }).catch((err) => {
+        changeQuantity();
+        deleteArticle();
+      });
+    })
+    .catch((err) => {
       console.log(err);
     });
+}
+
+//Ecoute et conserve les nouvelles quantité
+let listDeBtn = document.getElementsByClassName("itemQuantity");
+function changeQuantity() {
+  for (let index = 0; index < listDeBtn.length; index++) {
+    let element = listDeBtn[index];
+    element.addEventListener("change", (e) => {
+      id = element.closest("[data-id]").dataset.id;
+      color = element.closest("[data-color]").dataset.color;
+      for (let i = 0; i < itemsLocal.length; i++) {
+        if (id === itemsLocal[i].id && color === itemsLocal[i].colors) {
+          itemsLocal[i].quantity = e.target.value;
+          document.location.reload();
+          localStorage.setItem("arrayCanapLocal", JSON.stringify(itemsLocal));
+        }
+      }
+    });
+  }
 }
 
 //Supprime un article
@@ -135,7 +129,7 @@ let regExpName = new RegExp(/^[A-Za-zàáâãäåçèéêëìíîïðòóôõö�
 let regExpEmail = new RegExp(
   /^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$/
 );
-let regExpAddress = new RegExp(/^[a-zA-Z0-9\s-',]+$/); 
+let regExpAddress = new RegExp(/^[a-zA-Z0-9\s-',]+$/);
 
 //Ecoute le changement et valide les champs du formulaire
 firstName.addEventListener("change", () => {
@@ -200,7 +194,7 @@ order.addEventListener("click", (e) => {
     city: city.value,
     email: email.value,
   };
-  // Si le panier est vide ou si l'un des champs du formulaire est mal renseigné ou vide -> affiche une alerte 
+  // Si le panier est vide ou si l'un des champs du formulaire est mal renseigné ou vide -> affiche une alerte
   if (
     firstName.value == "" ||
     lastName.value == "" ||
@@ -209,12 +203,14 @@ order.addEventListener("click", (e) => {
     email.value == ""
   ) {
     alert("Un des champs du formulaire n'est pas completé");
-  }else if (
-		localStorage.getItem('arrayCanapLocal') === null ||
-		JSON.parse(localStorage.getItem('arrayCanapLocal')).length < 1
-	) {
-		alert('Votre panier est vide! Veuillez choisir des produits pour passer commande.')
-	} else if (
+  } else if (
+    localStorage.getItem("arrayCanapLocal") === null ||
+    JSON.parse(localStorage.getItem("arrayCanapLocal")).length < 1
+  ) {
+    alert(
+      "Votre panier est vide! Veuillez choisir des produits pour passer commande."
+    );
+  } else if (
     regExpName.test(firstName.value) == false ||
     regExpName.test(lastName.value) == false ||
     regExpAddress.test(address.value) == false ||
@@ -223,17 +219,16 @@ order.addEventListener("click", (e) => {
   ) {
     alert("Un des champs du formulaire n'est pas valide !");
   } //Sinon je crée un tableau qui va contenir les données du storage(vérification grâce à l'id)
-    else {
+  else {
     let products = [];
 
     itemsLocal.forEach((order) => {
       products.push(order.id);
-
     });
     //Je crée un objet où il y a les données du formulaire et les données du storage
-    let confirmOrder = {contact, products};
+    let confirmOrder = { contact, products };
 
-    // et je renvoi cet objet en JSON vers le serveur avec fetch  
+    // et je renvoi cet objet en JSON vers le serveur avec fetch
     fetch("http://localhost:3000/api/products/order", {
       method: "POST",
       headers: {
@@ -257,63 +252,3 @@ order.addEventListener("click", (e) => {
       });
   }
 });
-
-//*********************************             V2             ********************************************************** */
-//initialise la lecture du localstorage et récupère les données en format JS
-
-// function productsLocal(itemLocal){
-//   let itemsLocal = JSON.parse(localStorage.getItem("arrayCanapLocal"));
-//   if (itemsLocal != null){
-//     console.log("Il y a des canapés");
-//     //return JSON.parse(itemsLocal); Le return ne fonctionne pas
-//   }else{
-//     console.log("Le panier est vide !");//J'aimerai afficher ce texte sur la page
-//   }
-
-//   //ajouter une boucle pour récuperer les données??
-//   //for (let i = 0; i < itemsLocal.length; i++);
-
-// };
-
-// // // //récuperer les données de fetch
-// function productsFetch(itemsFetch){
-//   fetch(`http://localhost:3000/api/products/`)
-//   .then(response => response.json())
-//   .then (itemsFetch => console.log(itemsFetch));
-//   //Il faudrait que j'ajoute un catch(err)
-// }
-
-// function displayData (itemsFetch, itemLocal){
-//   productsFetch();
-//   productsLocal();
-
-//   if (itemsFetch.id === itemLocal.id){
-//     let dataItems="";
-
-//     dataItems.innerHTML = `<article class="cart__item" data-id="${itemLocal.id}" data-color="${itemLocal.colors}">
-//     <div class="cart__item__img">
-//       <img src=${itemsFetch.imageUrl} alt=${itemsFetch.altTxt}>
-//     </div>
-//     <div class="cart__item__content">
-//       <div class="cart__item__content__description">
-//         <h2>${itemsFetch.name}</h2>
-//         <p>${itemLocal.colors}</p>
-//         <p>${itemsFetch.price}</p>
-//       </div>
-//       <div class="cart__item__content__settings">
-//         <div class="cart__item__content__settings__quantity">
-//           <p>Qté :</p>
-//           <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value=${itemLocal.quantity} >
-//         </div>
-//         <div class="cart__item__content__settings__delete">
-//           <p class="deleteItem">Supprimer</p>
-//         </div>
-//       </div>
-//     </div>
-//   </article>`
-//   document.getElementById("cart__items").innerHTML = dataItems;
-//   }
-
-// }
-
-//********************************************************************************************** */

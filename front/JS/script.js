@@ -1,4 +1,4 @@
-//récuperer les données de l'API et les dispatché dans le dom avec une boucle .map
+//récuperer les données de l'API et les dispatcher dans le dom avec une boucle .map
 fetch("http://localhost:3000/api/products")
   .then((response) => response.json())
   .then((jsonListSofa) => {
