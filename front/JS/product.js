@@ -62,6 +62,10 @@ btn.addEventListener("click", (e) => {
     alert("Veuillez choisir une couleur et une quantité");
     return [];
   }
+  if(quantity>100){
+    alert("La qantité est supérieur à 100");
+    return canapeLocal;
+  }
 
   // Si le tableau est vide alors on ajoute le produit et on convertit les données au format JSON avec .stringify
   if (canapeLocal == null) {
