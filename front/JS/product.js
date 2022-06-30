@@ -57,13 +57,13 @@ btn.addEventListener("click", (e) => {
   //initialise la lecture de locastorage et convertit les données en format JS avec .parse
   let canapeLocal = JSON.parse(localStorage.getItem("arrayCanapLocal"));
 
-  //Si aucune données n'est rentrées return[] + alert
+  //Si aucune donnée n'est rentrée alors return[] + alert
   if (colors == null || colors === "" || quantity == null || quantity == 0) {
     alert("Veuillez choisir une couleur et une quantité");
     return [];
   }
   if(quantity>100){
-    alert("La qantité est supérieur à 100");
+    alert("Veuillez choisir une quantité inférieure à 100.");
     return canapeLocal;
   }
 
@@ -72,7 +72,7 @@ btn.addEventListener("click", (e) => {
     canapeLocal = [];
     canapeLocal.push(dataCanap);
     localStorage.setItem("arrayCanapLocal", JSON.stringify(canapeLocal));
-  } //S'il y a un produit dont l'ID et la couleurs sont les mêmes on change la qt sans changer de produit
+  } //S'il y a un produit dont l'ID et la couleur sont les mêmes on change la qt sans changer de produit
   else if (canapeLocal != null) {
     canapeLocal.forEach((canap, ind) => {
       if (canap.id === id && canap.colors === colors) {

@@ -7,7 +7,7 @@ let dataItems = document.getElementById("cart__items");
 let total = 0;
 let numberProduct = 0;
 
-//Si le panier est vide -> afficher un message sinon appel des fonction pour afficher les produits
+//Si le panier est vide -> afficher un message sinon appel des fonctions pour afficher les produits
 if (
   localStorage.getItem("arrayCanapLocal") === null ||
   JSON.parse(localStorage.getItem("arrayCanapLocal")).length < 1
@@ -75,7 +75,7 @@ function findFetch() {
     });
 }
 
-//Ecoute et conserve les nouvelles quantité
+//Ecoute et conserve les nouvelles quantités
 let listDeBtn = document.getElementsByClassName("itemQuantity");
 function changeQuantity() {
   for (let index = 0; index < listDeBtn.length; index++) {
@@ -83,12 +83,16 @@ function changeQuantity() {
     element.addEventListener("change", (e) => {
       id = element.closest("[data-id]").dataset.id;
       color = element.closest("[data-color]").dataset.color;
+      if(e.target.value>100){
+        alert("La quantité est supérieure à 100, veuillez choisir une autre quantité.")
+      }
       for (let i = 0; i < itemsLocal.length; i++) {
-        if (id === itemsLocal[i].id && color === itemsLocal[i].colors) {
+        if (id === itemsLocal[i].id && color === itemsLocal[i].colors && e.target.value<100) {
           itemsLocal[i].quantity = e.target.value;
-          document.location.reload();
           localStorage.setItem("arrayCanapLocal", JSON.stringify(itemsLocal));
-        }
+          document.location.reload();
+          
+        }    
       }
     });
   }
@@ -107,7 +111,7 @@ function deleteArticle() {
   }
 }
 
-//calcul le nombre d'article
+//calcul le nombre d'articles
 function getNumberProduct() {
   findCanap();
   for (let product of itemsLocal) {
@@ -181,7 +185,7 @@ email.addEventListener("change", () => {
   }
 });
 
-// Ecoute le click sur le bouton Commander et créer un objet contact
+// Ecoute le click sur le bouton "Commander" et crée un objet contact
 
 let order = document.getElementById("order");
 
@@ -228,7 +232,7 @@ order.addEventListener("click", (e) => {
     //Je crée un objet où il y a les données du formulaire et les données du storage
     let confirmOrder = { contact, products };
 
-    // et je renvoi cet objet en JSON vers le serveur avec fetch
+    // et je renvoie cet objet en JSON vers le serveur avec fetch
     fetch("http://localhost:3000/api/products/order", {
       method: "POST",
       headers: {
